@@ -18,7 +18,9 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long accountId;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 
     @Convert(converter = OperationTypeConverter.class)
     private OperationType operationType;
@@ -29,8 +31,8 @@ public class Transaction {
     @Column(updatable = false)
     private LocalDateTime eventDate;
 
-    public Transaction(@NonNull Long accountId, @NonNull OperationType operationType, @NonNull BigDecimal amount) {
-        this.accountId = accountId;
+    public Transaction(@NonNull Account account, @NonNull OperationType operationType, @NonNull BigDecimal amount) {
+        this.account = account;
         this.operationType = operationType;
         BigDecimal absAmount = amount.abs();
         switch (this.operationType.getRegistrationType()) {

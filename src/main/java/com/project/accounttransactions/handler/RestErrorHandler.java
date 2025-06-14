@@ -1,5 +1,6 @@
 package com.project.accounttransactions.handler;
 
+import com.project.accounttransactions.exception.AccountNotFoundException;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -36,5 +37,11 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ResponseError> handleIllegalArgumentException(IllegalArgumentException ex) {
         ResponseError responseError = new ResponseError(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseError);
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ResponseError> handleAccountNotFoundException(AccountNotFoundException ex) {
+        ResponseError responseError = new ResponseError(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseError);
     }
 }

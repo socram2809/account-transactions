@@ -21,6 +21,6 @@ public enum OperationType {
                 return type;
             }
         }
-        throw new IllegalArgumentException("Invalid id: " + id);
+        throw new IllegalArgumentException("Invalid operation type id: " + id);
     }
 }
