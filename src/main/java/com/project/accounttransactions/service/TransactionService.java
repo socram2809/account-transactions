@@ -5,6 +5,7 @@ import com.project.accounttransactions.domain.OperationType;
 import com.project.accounttransactions.domain.Transaction;
 import com.project.accounttransactions.repository.TransactionRepository;
 import com.project.accounttransactions.vo.TransactionCreateRequestVO;
+import com.project.accounttransactions.vo.TransactionResponseVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,8 @@ public class TransactionService {
 
     private final AccountService accountService;
 
-    public void create(TransactionCreateRequestVO transactionCreateRequestVO) {
-        log.info("Creating transaction for accountId: {}, operationtypeId: {}, amount: {}",
+    public TransactionResponseVO create(TransactionCreateRequestVO transactionCreateRequestVO) {
+        log.info("Creating transaction for accountId: {}, operationTypeId: {}, amount: {}",
                 transactionCreateRequestVO.getAccountId(),
                 transactionCreateRequestVO.getOperationTypeId(),
                 transactionCreateRequestVO.getAmount());
@@ -29,5 +30,9 @@ public class TransactionService {
 
         Transaction transaction = new Transaction(account, operationType, transactionCreateRequestVO.getAmount());
         transactionRepository.save(transaction);
+
+        log.info("Transaction created: {}", transaction);
+
+        return TransactionResponseVO.from(transaction);
     }
 }

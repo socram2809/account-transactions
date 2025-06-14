@@ -29,19 +29,21 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
         );
-        log.error("errors={}", errors);
+        log.warn("errors={}", errors);
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ResponseError> handleIllegalArgumentException(IllegalArgumentException ex) {
         ResponseError responseError = new ResponseError(ex.getMessage());
+        log.warn("IllegalArgumentException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseError);
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<ResponseError> handleAccountNotFoundException(AccountNotFoundException ex) {
         ResponseError responseError = new ResponseError(ex.getMessage());
+        log.warn("AccountNotFoundException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseError);
     }
 }
