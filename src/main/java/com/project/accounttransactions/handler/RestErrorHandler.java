@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -29,5 +30,11 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
         );
         log.error("errors={}", errors);
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseError> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ResponseError responseError = new ResponseError(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseError);
     }
 }
