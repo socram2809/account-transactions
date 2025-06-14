@@ -22,19 +22,23 @@ public class AccountService {
         Account account = new Account(accountCreateRequestVO.getDocumentNumber());
         accountRepository.save(account);
 
+        log.info("Account created: {}", account);
+
+        return AccountResponseVO.from(account);
+    }
+
+    public AccountResponseVO findById(Long id) {
+        log.info("Finding account by id: {}", id);
+
+        Account account = findEntityById(id);
+
+        log.info("Account found: {}", account);
+
         return AccountResponseVO.from(account);
     }
 
     public Account findEntityById(Long id) {
-        log.info("Finding account by id: {}", id);
-
         return accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + id));
-    }
-
-    public AccountResponseVO findById(Long id) {
-        Account account = findEntityById(id);
-
-        return AccountResponseVO.from(account);
     }
 }

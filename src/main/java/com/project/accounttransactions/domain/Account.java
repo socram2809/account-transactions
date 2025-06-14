@@ -6,12 +6,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @NoArgsConstructor
 @Entity
-@Slf4j
 @ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor

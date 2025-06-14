@@ -2,6 +2,7 @@ package com.project.accounttransactions.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @ToString
+@Slf4j
 @EqualsAndHashCode
 public class Transaction {
 

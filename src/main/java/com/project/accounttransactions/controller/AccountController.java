@@ -29,4 +29,15 @@ public class AccountController {
             @Valid @RequestBody AccountCreateRequestVO accountCreateRequestVO) {
         return accountService.create(accountCreateRequestVO);
     }
+
+    @Operation(
+            description = "Find an account by id",
+            tags = {"Account Management"})
+    @ApiResponse(responseCode = "200", description = "Account found")
+    @ApiResponse(responseCode = "404", description = "Account not found")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{accountId}")
+    public AccountResponseVO findById(@PathVariable Long accountId) {
+        return accountService.findById(accountId);
+    }
 }
