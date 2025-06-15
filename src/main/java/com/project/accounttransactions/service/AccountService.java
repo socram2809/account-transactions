@@ -20,11 +20,11 @@ public class AccountService {
         log.info("Creating account with documentNumber: {}", accountCreateRequestVO.getDocumentNumber());
 
         Account account = new Account(accountCreateRequestVO.getDocumentNumber());
-        accountRepository.save(account);
+        Account savedAccount = accountRepository.save(account);
 
-        log.info("Account created: {}", account);
+        log.info("Account created: {}", savedAccount);
 
-        return AccountResponseVO.from(account);
+        return AccountResponseVO.from(savedAccount);
     }
 
     public AccountResponseVO findById(Long id) {

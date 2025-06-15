@@ -1,8 +1,10 @@
 package com.project.accounttransactions.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -12,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @ToString
-@Slf4j
 @EqualsAndHashCode
 public class Transaction {
 
@@ -33,14 +34,22 @@ public class Transaction {
     @Column(updatable = false)
     private LocalDateTime eventDate;
 
-    public Transaction(@NonNull Account account, @NonNull OperationType operationType, @NonNull BigDecimal amount) {
+    public Transaction(Account account, OperationType operationType, BigDecimal amount) {
+        if(account == null) {
+            throw new IllegalArgumentException("Account cannot be null");
+        }
+        if(operationType == null) {
+            throw new IllegalArgumentException("OperationType cannot be null");
+        }
+        if(amount == null) {
+            throw new IllegalArgumentException("Amount cannot be null");
+        }
         this.account = account;
         this.operationType = operationType;
         BigDecimal absAmount = amount.abs();
         switch (this.operationType.getRegistrationType()) {
             case POSITIVE -> this.amount = absAmount;
             case NEGATIVE -> this.amount = absAmount.negate();
-            default -> throw new IllegalArgumentException("Invalid registration type for operation: " + operationType);
         }
     }
 }

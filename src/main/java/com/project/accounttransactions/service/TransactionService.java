@@ -29,10 +29,10 @@ public class TransactionService {
         OperationType operationType = OperationType.fromId(transactionCreateRequestVO.getOperationTypeId());
 
         Transaction transaction = new Transaction(account, operationType, transactionCreateRequestVO.getAmount());
-        transactionRepository.save(transaction);
+        Transaction savedTransaction = transactionRepository.save(transaction);
 
-        log.info("Transaction created: {}", transaction);
+        log.info("Transaction created: {}", savedTransaction);
 
-        return TransactionResponseVO.from(transaction);
+        return TransactionResponseVO.from(savedTransaction);
     }
 }
