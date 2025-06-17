@@ -19,7 +19,7 @@ public class AccountService {
     public AccountResponseVO create(AccountCreateRequestVO accountCreateRequestVO) {
         log.info("Creating account with documentNumber: {}", accountCreateRequestVO.getDocumentNumber());
 
-        Account account = new Account(accountCreateRequestVO.getDocumentNumber());
+        Account account = new Account(accountCreateRequestVO.getDocumentNumber(), accountCreateRequestVO.getAvailableCreditLimit());
         Account savedAccount = accountRepository.save(account);
 
         log.info("Account created: {}", savedAccount);

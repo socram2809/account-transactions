@@ -6,6 +6,7 @@ import com.project.accounttransactions.domain.Transaction;
 import com.project.accounttransactions.repository.TransactionRepository;
 import com.project.accounttransactions.vo.TransactionCreateRequestVO;
 import com.project.accounttransactions.vo.TransactionResponseVO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class TransactionService {
 
     private final AccountService accountService;
 
+    @Transactional
     public TransactionResponseVO create(TransactionCreateRequestVO transactionCreateRequestVO) {
         log.info("Creating transaction for accountId: {}, operationTypeId: {}, amount: {}",
                 transactionCreateRequestVO.getAccountId(),
@@ -30,6 +32,8 @@ public class TransactionService {
 
         Transaction transaction = new Transaction(account, operationType, transactionCreateRequestVO.getAmount());
         Transaction savedTransaction = transactionRepository.save(transaction);
+
+        account.updateAvailableCreditLimit(transaction.getAmount());
 
         log.info("Transaction created: {}", savedTransaction);
 

@@ -1,6 +1,7 @@
 package com.project.accounttransactions.handler;
 
 import com.project.accounttransactions.exception.AccountNotFoundException;
+import com.project.accounttransactions.exception.AvaliableCreditLimitCannotBeNegativeException;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -45,5 +46,12 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
         ResponseError responseError = new ResponseError(ex.getMessage());
         log.warn("AccountNotFoundException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseError);
+    }
+
+    @ExceptionHandler(AvaliableCreditLimitCannotBeNegativeException.class)
+    public ResponseEntity<ResponseError> handleAvaliableCreditLimitCannotBeNegativeException(AvaliableCreditLimitCannotBeNegativeException ex) {
+        ResponseError responseError = new ResponseError(ex.getMessage());
+        log.warn("AvaliableCreditLimitCannotBeNegativeException: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseError);
     }
 }

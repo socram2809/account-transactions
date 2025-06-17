@@ -4,6 +4,7 @@ import com.project.accounttransactions.domain.Account;
 import com.project.accounttransactions.domain.OperationType;
 import com.project.accounttransactions.domain.Transaction;
 import com.project.accounttransactions.exception.AccountNotFoundException;
+import com.project.accounttransactions.exception.AvaliableCreditLimitCannotBeNegativeException;
 import com.project.accounttransactions.repository.TransactionRepository;
 import com.project.accounttransactions.vo.TransactionCreateRequestVO;
 import com.project.accounttransactions.vo.TransactionResponseVO;
@@ -37,7 +38,7 @@ class TransactionServiceTest {
         transactionCreateRequestVO.setAccountId(1L);
         transactionCreateRequestVO.setOperationTypeId(1);
         transactionCreateRequestVO.setAmount(BigDecimal.TEN);
-        Account account = new Account("12345678900");
+        Account account = new Account("12345678900", BigDecimal.TEN);
         ReflectionTestUtils.setField(account, "id", 1L);
         Transaction transaction = new Transaction(account, OperationType.NORMAL_PURCHASE, BigDecimal.TEN);
         Transaction transactionOnDB = new Transaction(account, OperationType.NORMAL_PURCHASE, BigDecimal.TEN);
@@ -62,7 +63,7 @@ class TransactionServiceTest {
         transactionCreateRequestVO.setOperationTypeId(999);
         transactionCreateRequestVO.setAmount(BigDecimal.TEN);
 
-        when(accountService.findEntityById(1L)).thenReturn(new Account("12345678900"));
+        when(accountService.findEntityById(1L)).thenReturn(new Account("12345678900", BigDecimal.TEN));
 
         assertEquals(
                 "Invalid operation type id: 999",
@@ -85,5 +86,22 @@ class TransactionServiceTest {
                 assertThrows(AccountNotFoundException.class, () -> transactionService.create(transactionCreateRequestVO)).getMessage()
         );
         verify(transactionRepository, never()).save(any());
+    }
+
+    @Test
+    void createTransaction_shouldThrowAvailableCreditLimitExceededException_whenAvailableCreditLimitIsExceeded() {
+        TransactionCreateRequestVO transactionCreateRequestVO = new TransactionCreateRequestVO();
+        transactionCreateRequestVO.setAccountId(1L);
+        transactionCreateRequestVO.setOperationTypeId(1);
+        transactionCreateRequestVO.setAmount(BigDecimal.valueOf(1000).negate());
+        Account account = new Account("12345678900", BigDecimal.TEN);
+        ReflectionTestUtils.setField(account, "id", 1L);
+
+        when(accountService.findEntityById(1L)).thenReturn(account);
+
+        assertEquals(
+                "Available credit limit cannot be negative",
+                assertThrows(AvaliableCreditLimitCannotBeNegativeException.class, () -> transactionService.create(transactionCreateRequestVO)).getMessage()
+        );
     }
 }

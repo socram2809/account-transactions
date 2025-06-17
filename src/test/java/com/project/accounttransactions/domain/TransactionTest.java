@@ -11,7 +11,7 @@ public class TransactionTest {
 
     @Test
     void shouldCreateTransaction_whenValidParametersWithNegativeAmount() {
-        Account account = new Account("12345678900");
+        Account account = new Account("12345678900", BigDecimal.TEN);
         Transaction transaction = new Transaction(account, OperationType.NORMAL_PURCHASE, BigDecimal.TEN);
         assertEquals(account, transaction.getAccount());
         assertEquals(OperationType.NORMAL_PURCHASE, transaction.getOperationType());
@@ -20,7 +20,7 @@ public class TransactionTest {
 
     @Test
     void shouldCreateTransaction_whenValidParametersWithPositiveAmount() {
-        Account account = new Account("12345678900");
+        Account account = new Account("12345678900", BigDecimal.TEN);
         Transaction transaction = new Transaction(account, OperationType.CREDIT_VOUCHER, BigDecimal.TEN);
         assertEquals(account, transaction.getAccount());
         assertEquals(OperationType.CREDIT_VOUCHER, transaction.getOperationType());
@@ -37,7 +37,7 @@ public class TransactionTest {
 
     @Test
     void shouldThrowIllegalArgumentException_whenOperationTypeIsNull() {
-        Account account = new Account("12345678900");
+        Account account = new Account("12345678900", BigDecimal.TEN);
         assertEquals(
                 "OperationType cannot be null",
                 assertThrows(IllegalArgumentException.class, () -> new Transaction(account, null, BigDecimal.TEN)).getMessage()
@@ -46,7 +46,7 @@ public class TransactionTest {
 
     @Test
     void shouldThrowIllegalArgumentException_whenAmountIsNull() {
-        Account account = new Account("12345678900");
+        Account account = new Account("12345678900", BigDecimal.TEN);
         assertEquals(
                 "Amount cannot be null",
                 assertThrows(IllegalArgumentException.class, () -> new Transaction(account, OperationType.NORMAL_PURCHASE, null)).getMessage()
